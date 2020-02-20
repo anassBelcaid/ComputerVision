@@ -6,3 +6,8 @@ Resources On *Computer Vision* including
 - Courses with full details 
 - Tutorials
 - Links
+
+
+## Courses
+
+1. [Introduction to Image Understanding](./Courses/understanding_Images_Sanja/)
