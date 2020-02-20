@@ -1,0 +1,9 @@
+* Introduction to Image understanding
+
+Roadmap to image understanding.
+
+
+# TODO: Watch Org mode video #
+
+
+
