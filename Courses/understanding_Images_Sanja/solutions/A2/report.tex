@@ -253,8 +253,32 @@ def harris_corners(img, window_size=3, k=0.04):
 %{{{Lowe's SIFT Descriptor
 \item \textbf{Implement Lowe's Scale invariant interest point detection. Let the
   number of scales per octave be a parameter of your code?}
-%}}}
+
+  The code for the \texttt{SIFT} method is in the file
+  \mintinline{python}{SIFT.py}. The \autoref{fig:octave1} shows the images of
+  the first octave and \autoref{fig:octave_dog} the difference of Gaussian
+  images.
+
 \end{enumerate}
+%{{{figure first octave
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=10cm,height=3cm]{./octave1.png}
+  \caption{First octave}%
+    \label{fig:octave1}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=10cm,height=3cm]{./octave1_dog.png}
+  \caption{First octave difference of Gaussians}%
+  \label{fig:octave_dog}
+\end{figure}
+%}}}
+
+%}}}
+
+
 
 %}}}
 
