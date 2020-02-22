@@ -176,7 +176,7 @@ color.
 }
 \hfill
   \subfloat[][reduced]{
-  \includegraphics[widht=5cm,height= 4cm]{./reduced.png}
+  \includegraphics[width=2.5cm,height= 4cm]{./reduced.png}
 }
   \caption{Reduced Image}%
   \label{fig:seam_reduction}
@@ -186,4 +186,76 @@ color.
 
 \end{enumerate}
 %}}}
+%{{{ KeyPoint Detection
+\section{KeyPoint Detection}%
+\label{sec:keypoint_detection}
+
+\begin{enumerate}
+  \item \textbf{Implement a function to perform \textbf{Harris corner}
+    detection?}
+  %{{{ Harris Corner code
+      \begin{minted}[frame=lines, fontsize=\scriptsize]{python}
+
+def harris_corners(img, window_size=3, k=0.04):
+    """
+    Compute Harris corner response map. Follow the math equation
+    R=Det(M)-k(Trace(M)^2).
+        
+    Args:
+        img: Grayscale image of shape (H, W)
+        window_size: size of the window function
+        k: sensitivity parameter
+
+    Returns:
+        response: Harris response image of shape (H, W)
+    """
+
+    H, W = img.shape
+    window = np.ones((window_size, window_size))
+
+    response = np.zeros((H, W))
+
+    dx = filters.sobel_v(img)
+    dy = filters.sobel_h(img)
+
+    #convolving 
+    dxc = convolve(dx**2, window)
+    dyc = convolve(dy**2, window)
+    dxcc= convolve(dx*dy, window) 
+    #creating the main matrix
+    M= np.zeros((2*H, 2*W))
+    
+    #storing the main matrix
+    M[::2,::2] = dxc
+    M[1::2,1::2] = dyc
+    M[::2,1::2] = dxcc 
+    M[1::2,::2] = dxcc
+    
+    M= view_as_blocks(M, block_shape=(2,2))
+
+    for i in range(H):
+        for j in range(W):
+            mat = M[i,j]
+            lam,eigenVec =np.linalg.eig(mat)
+            response[i,j] = lam.prod()- k*(lam.sum()**2)
+
+    return response
+
+    \end{minted}
+    %}}}
+%{{{Figure
+  \begin{figure}[ht!]
+  \centering
+  \includegraphics[width=10cm, height=5cm]{./harris_response.png}
+\end{figure}
+%}}}
+
+%{{{Lowe's SIFT Descriptor
+\item \textbf{Implement Lowe's Scale invariant interest point detection. Let the
+  number of scales per octave be a parameter of your code?}
+%}}}
+\end{enumerate}
+
+%}}}
+
 \end{document}
