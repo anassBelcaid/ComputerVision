@@ -28,7 +28,7 @@ images](https://www.cs.utoronto.ca/~fidler/teaching/2019/CSC420.html).
 9. [Robust Matching Homographie](lectures/lecture9.pdf) 
 
 
-- [Assignement3](to_be_added)
+- [Assignement3](/solutions/A3/Assignment3.pdf)
 
 ## links ##
 1. Temporarly learned features: [document + code](https://cvlab.epfl.ch/research/page-90554-en-html/research-tilde/)
