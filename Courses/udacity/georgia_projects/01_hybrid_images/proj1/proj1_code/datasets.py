@@ -10,7 +10,7 @@ import PIL
 import torch
 import torch.utils.data as data
 import torchvision.transforms as transforms
-
+from pathlib import Path
 from typing import List, Tuple
 
 
@@ -33,9 +33,21 @@ def make_dataset(path: str) -> Tuple[List[str],List[str]]:
 
   ############################
   ### TODO: YOUR CODE HERE ###
+  #convert to Pathlib for a better interface
+  path = Path(path)
 
-  raise NotImplementedError('`make_dataset` function in `datasets.py` needs '
-    + 'to be implemented')
+  #initial lists
+  images_a, images_b = [], []
+
+
+  for F in sorted(path.iterdir()):
+    if F.name[1]=='a':
+      images_a.append(F)
+    else:
+      images_b.append(F)
+
+  
+
 
   ### END OF STUDENT CODE ####
   ############################
@@ -60,9 +72,8 @@ def get_cutoff_frequencies(path: str) -> List[int]:
 
   ############################
   ### TODO: YOUR CODE HERE ###
+  cutoff_frequencies = np.loadtxt(path)
 
-  raise NotImplementedError('`get_cutoff_frequencies` function in '
-    + '`datasets.py` needs to be implemented')
 
   ### END OF STUDENT CODE ####
   ############################
@@ -91,12 +102,11 @@ class HybridImageDataset(data.Dataset):
     images_a, images_b = make_dataset(image_dir)
     cutoff_frequencies = get_cutoff_frequencies(cf_file)
 
-    self.transform = None
+    self.transform = transforms.ToTensor()
     ############################
     ### TODO: YOUR CODE HERE ###
 
-    raise NotImplementedError('`self.transform` function in `datasets.py` needs to '
-      + 'be implemented')
+    self.transform = transforms.ToTensor()
 
     ### END OF STUDENT CODE ####
     ############################
@@ -111,8 +121,7 @@ class HybridImageDataset(data.Dataset):
     ############################
     ### TODO: YOUR CODE HERE ###
 
-    raise NotImplementedError('`__len__` function in `datasets.py` needs to '
-      + 'be implemented')
+    return len(self.images_a)
 
     ### END OF STUDENT CODE ####
     ############################
@@ -144,8 +153,19 @@ class HybridImageDataset(data.Dataset):
     ############################
     ### TODO: YOUR CODE HERE ###
 
-    raise NotImplementedError('`__getitem__ function in `datasets.py` needs '
-      + 'to be implemented')
+    #reading image_a
+    image_a = PIL.Image.open(self.images_a[idx])
+    image_a = self.transform(image_a)
+
+    #reading image_b
+    image_b = PIL.Image.open(self.images_b[idx])
+    image_b = self.transform(image_b)
+
+
+    #frequency
+    cutoff_frequency = int(self.cutoff_frequencies[idx])
+
+
 
     ### END OF STUDENT CODE ####
     ############################
