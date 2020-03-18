@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{subfig}
+\usepackage{minted}
+
+\begin{document}
+
+\begin{center}
+{\Large Introduction to Image Understanding Homework 4}
+
+\begin{tabular}{rl}
+Name: &  Anass Belcaid \\
+\end{tabular}
+\end{center}
+
+By turning in this assignment, I agree by the Stanford honor code and declare
+that all of this is my own work.
+
+
+%{{{Image geometry
+\section*{Image Geometry}
+\begin{itemize}
+  \item What is the internal Camera parameter matrix $K$?
+    The coordinate the point 
+    \begin{equation}
+    X = \begin{pmatrix}
+      X\\ Y \\ Z \\ 1
+    \end{pmatrix}
+     \rightarrow \begin{pmatrix}
+       fX + Zp_x \\
+       fY + Zp_y
+     \end{pmatrix}
+     = \begin{bmatrix}
+       f &  & px & 0\\
+         & f& py & 0\\
+         &  & 1  & 0\\
+     \end{bmatrix}
+     \begin{pmatrix}
+       X \\ Y \\ Z \\ 1
+     \end{pmatrix}
+   \end{equation}
+
+   Hence the \textbf{internal matrix} is given by
+  \begin{equation}
+    K = \begin{bmatrix}
+      721.5 & 0 & 609.6 & 0\\
+      0     & 721.5 & 172.9 & 0\\
+      0   & 0      & 1    & 0\\
+    \end{bmatrix}
+  \end{equation} 
+\item Write down the equation of the \textbf{ground plan} In Camera coordinate
+  system
+\end{itemize}
+%}}} end Image geometry
+
+
+\end{document}
