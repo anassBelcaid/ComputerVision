@@ -71,7 +71,7 @@ class HistogramLayer(nn.Module):
 
     def forward(self, x) -> torch.Tensor:
         """
-        Complete a feedforward pass of the histogram/binning layer byforming a
+        Complete a feed forward pass of the histogram/binning layer by forming a
         weighted histogram at every pixel value.
 
         The input should have 10 channels, where the first 8 represent cosines
@@ -79,7 +79,7 @@ class HistogramLayer(nn.Module):
         vectors, at every pixel. The last two channels will represent the
         (dx, dy) coordinates of the image gradient at this pixel.
 
-        The weighted histogram can be created by elementwise multiplication of
+        The weighted histogram can be created by element-wise multiplication of
         a 4d gradient magnitude tensor, and a 4d gradient binary occupancy
         tensor, where a tensor cell is activated if its value represents the
         maximum channel value within a "fibre" (see
@@ -200,9 +200,13 @@ def angles_to_vectors_2d_pytorch(angles: torch.Tensor) -> torch.Tensor:
     ###########################################################################
     # TODO: YOUR CODE HERE                                                    #
     ###########################################################################
+    angles_sin = torch.sin(angles)
+    angles_sin.unsqueeze_(1)
+    angles_cos = torch.cos(angles)
+    angles_cos.unsqueeze_(1)
 
-    raise NotImplementedError('`angles_to_vectors_2d_pytorch` needs to be '
-      + 'implemented')
+    angle_vectors = torch.cat((angles_cos, angles_sin),1 )
+
 
     ###########################################################################
     #                             END OF YOUR CODE                            #
@@ -229,14 +233,17 @@ class SIFTOrientationLayer(nn.Module):
         Returns:
         -   None
         """
-        super(SIFTOrientationLayer, self).__init__()
+        # super(SIFTOrientationLayer, self).__init__()
+        super().__init__()
 
         #######################################################################
         # TODO: YOUR CODE HERE                                                #
         #######################################################################
+        self.layer = nn.Conv2d(in_channels=2, out_channels=10,kernel_size=1, bias=False)
 
-        raise NotImplementedError('`__init__` in `SIFTOrientationLayer` needs '
-          + 'to be implemented')
+        #setting the layey parameters
+        self.layer.weight = self.get_orientation_bin_weights()
+
 
         #######################################################################
         #                           END OF YOUR CODE                          #
@@ -264,9 +271,26 @@ class SIFTOrientationLayer(nn.Module):
         #######################################################################
         # TODO: YOUR CODE HERE                                                #
         #######################################################################
+        weight_param = torch.ones((10,2, 1, 1))
 
-        raise NotImplementedError('`get_orientation_bin_weights` needs to be '
-          + 'implemented')
+        #getting the angles
+        angles = torch.arange(np.pi/8, 2*np.pi, np.pi/4)
+
+
+        #converting to coordinates
+        angles_2d = angles_to_vectors_2d_pytorch(angles)
+        angles_2d.unsqueeze_(2)
+        angles_2d.unsqueeze_(3)
+
+        #assign cos angles weights
+        weight_param[:8] = angles_2d
+        weight_param[8] = torch.Tensor([[[1]], [[0]]])
+        weight_param[9] = torch.Tensor([[[0]], [[1]]])
+
+        #converting to param
+        weight_param = nn.Parameter(weight_param)
+
+
 
         #######################################################################
         #                           END OF YOUR CODE                          #
@@ -283,6 +307,7 @@ class SIFTOrientationLayer(nn.Module):
         Returns:
         -   out: Torch tensor with shape (1,10,m,n)
         """
+
         return self.layer(x)
 
 
@@ -302,17 +327,20 @@ class SIFTNet(nn.Module):
         Returns:
         -   None
         """
-        super(SIFTNet, self).__init__()
+        # super(SIFTNet, self).__init__()
+        super().__init__()
 
         #######################################################################
         # TODO: YOUR CODE HERE                                                #
         #######################################################################
+        #gradient layer
+        gradient_layer = ImageGradientsLayer()
+        sift_orientation = SIFTOrientationLayer()
+        self.net = torch.nn.Sequential([gradient_layer, sift_orientation])
 
-        raise NotImplementedError('`__init__` in `SIFTNet` needs to be '
-          + 'implemented')
 
         #######################################################################
-        #                           END OF YOUR CODE                          #
+        #                           endl OF YOUR CODE                          #
         #######################################################################
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
